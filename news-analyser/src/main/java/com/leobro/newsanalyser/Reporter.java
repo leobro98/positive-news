@@ -11,15 +11,16 @@ import java.util.TimerTask;
  */
 public class Reporter {
 
-	private List<NewsMessage> messages;
-	private int newsLimit;
-	private String[] positiveWords;
+	private final List<NewsMessage> messages;
+	private final int newsLimit;
+	private final String[] positiveWords;
 
 	/**
 	 * Creates a new instance of the {@link Reporter} class. Runs a Timer task at the configured interval
 	 * in a separate thread to print the report.
-	 *  @param period       the period between reports in milliseconds,
-	 * @param newsLimit     the maximal count of most important news to show in the report.
+	 *
+	 * @param period        the period between reports in milliseconds,
+	 * @param newsLimit     the maximal count of most important news to show in the report,
 	 * @param positiveWords array of words that regarded positive.
 	 */
 	public Reporter(int period, int newsLimit, String[] positiveWords) {

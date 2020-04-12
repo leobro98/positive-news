@@ -52,16 +52,23 @@ class NewsFeeder {
 	 */
 	public void feedNews() throws IOException {
 		connectToNewsAnalyser();
-		String newsMessage;
-
-		while ((newsMessage = generator.generateMessage()) != null) {
-			sendMessage(newsMessage);
-		}
+		generateMessagesPeriodically();
 	}
 
 	private void connectToNewsAnalyser() throws IOException {
 		Socket clientSocket = new Socket(ip, port);
-		out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream(), StandardCharsets.UTF_16), true);
+		boolean autoFlushBuffer;
+		out = new PrintWriter(
+				new OutputStreamWriter(
+						clientSocket.getOutputStream(), StandardCharsets.UTF_16),
+				autoFlushBuffer = true);
+	}
+
+	private void generateMessagesPeriodically() throws JsonProcessingException {
+		String message;
+		while ((message = generator.pauseAndGenerateMessage()) != null) {
+			sendMessage(message);
+		}
 	}
 
 	private void sendMessage(String newsMessage) {

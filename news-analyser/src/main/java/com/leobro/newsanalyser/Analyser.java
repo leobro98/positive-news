@@ -40,7 +40,7 @@ class Analyser {
 	public void analyse(String inputLine) {
 		NewsMessage message = convertToMessage(inputLine);
 
-		if (message != null && isPositive(message)) {
+		if (isPositive(message)) {
 			synchronized (reporter) {
 				reporter.add(message);
 			}
@@ -58,6 +58,10 @@ class Analyser {
 	}
 
 	boolean isPositive(NewsMessage message) {
+		if (message == null) {
+			return false;
+		}
+
 		String[] words = message.getHeadline().split(" ");
 		int positiveCount = 0;
 

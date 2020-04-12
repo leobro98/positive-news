@@ -39,7 +39,7 @@ public class NewsGeneratorTest {
 		generator = new NewsGenerator(CONFIGURED_DELAY_IN_MS, HEADLINE_WORDS, PRIORITY_WEIGHTS);
 		LocalTime startTime = LocalTime.now();
 
-		generator.generateMessage();
+		generator.pauseAndGenerateMessage();
 		Duration delay = Duration.between(startTime, LocalTime.now());
 
 		assertThat(Math.abs(delay.toMillis() - CONFIGURED_DELAY_IN_MS), lessThan(DELAY_INACCURACY));
@@ -47,7 +47,7 @@ public class NewsGeneratorTest {
 
 	@Test
 	public void when_generateMessageCalled_then_messageHasHeadlineAndPriority() throws JsonProcessingException {
-		String message = generator.generateMessage();
+		String message = generator.pauseAndGenerateMessage();
 
 		assertTrue(message.matches(".*\"" + HEADLINE + "\":.*"));
 		assertTrue(message.matches(".*\"" + PRIORITY + "\":.*"));
@@ -55,7 +55,7 @@ public class NewsGeneratorTest {
 
 	@Test
 	public void when_generateMessageCalled_then_priorityIsFrom0To9() throws JsonProcessingException {
-		String message = generator.generateMessage();
+		String message = generator.pauseAndGenerateMessage();
 
 		assertTrue(message.matches(".*\"" + PRIORITY + "\":" + PRIORITY_RANGE + ".*"));
 	}
@@ -64,7 +64,7 @@ public class NewsGeneratorTest {
 	public void when_generateMessageCalled_then_headlineContainsOnlyDefinedWords() throws JsonProcessingException {
 		List<String> definedWords = Arrays.asList(HEADLINE_WORDS);
 
-		String message = generator.generateMessage();
+		String message = generator.pauseAndGenerateMessage();
 
 		JSONObject jsonObject = new JSONObject(message);
 		String headline = jsonObject.getString(HEADLINE);
@@ -75,7 +75,7 @@ public class NewsGeneratorTest {
 
 	@Test
 	public void when_generateMessageCalled_then_headlineWordCountIsInRange() throws JsonProcessingException {
-		String message = generator.generateMessage();
+		String message = generator.pauseAndGenerateMessage();
 
 		JSONObject jsonObject = new JSONObject(message);
 		String headline = jsonObject.getString(HEADLINE);

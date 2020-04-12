@@ -4,7 +4,7 @@ The task involves the development of two separate Java SE 8 programs: a "mock ne
 
 The mock news feed should periodically generate messages containing random news item.
 
-The news analyser should handle the messages from the news feeds and periodically display a short summary about news items that are considered "interesting“.
+The news analyser should handle the messages from the news feeds and periodically display a short summary about news items that are considered "interesting".
 
 ## Mock news feed
 * Creates a persistent TCP connection to the news analyser and periodically sends news items over that connection. Each news item should be comprised of a headline and a priority.

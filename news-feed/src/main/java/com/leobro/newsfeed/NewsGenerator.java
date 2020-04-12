@@ -6,19 +6,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Generates news messages at the configured interval. The priority of a message is a random integer within the range
  * [0..9] (0 is the lowest and 9 is the highest priority). News messages with the higher priority are generated with
- * less probability than those with the lower priority. The headline of a message is a random combination of three
- * to five words (random number from three to five) from a configured list.
+ * less probability than those with the lower priority. The headline of a message is a random combination of several
+ * words from a configured list. The word count in the headline is a random number from a minimal word count to a
+ * maximal word count (default is from three to five words).
  */
 class NewsGenerator {
 
 	private static final int MIN_WORDS_IN_HEADLINE = 3;
 	private static final int MAX_WORDS_IN_HEADLINE = 5;
 
-	private long interval;
-	private String[] headlineWords;
 	private int minWords = MIN_WORDS_IN_HEADLINE;
 	private int maxWords = MAX_WORDS_IN_HEADLINE;
-	private WeightedRandomGenerator generator;
+	private final long interval;
+	private final String[] headlineWords;
+	private final WeightedRandomGenerator generator;
 	private final ObjectMapper objectMapper;
 
 	/**
@@ -41,7 +42,7 @@ class NewsGenerator {
 	 *
 	 * @return the news message as JSON string.
 	 */
-	public String generateMessage() throws JsonProcessingException {
+	public String pauseAndGenerateMessage() throws JsonProcessingException {
 		pause(interval);
 		NewsMessage message = createMessage();
 		return convertToJson(message);

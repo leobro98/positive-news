@@ -9,14 +9,14 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * Responsible for the connection with one TCP client, which is a news feeder. Makes its work in a separate thread.
- * Created by {@link NewsReceiverServer} for a new connection with a client. Accepts news messages and passes them
+ * Created by {@link NewsAnalyserServer} for a new connection with a client. Accepts news messages and passes them
  * to the instance of the {@link Analyser} class for the analysis and further reporting.
  */
 class NewsReceiver extends Thread {
 
 	private final Socket clientSocket;
 	private BufferedReader in;
-	private Analyser analyser;
+	private final Analyser analyser;
 
 	/**
 	 * Creates a new instance of the {@link NewsReceiver} class. Creates as well an {@link Analyser} instance
