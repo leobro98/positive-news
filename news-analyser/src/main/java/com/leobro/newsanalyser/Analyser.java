@@ -41,9 +41,7 @@ class Analyser {
 		NewsMessage message = convertToMessage(inputLine);
 
 		if (isPositive(message)) {
-			synchronized (reporter) {
-				reporter.add(message);
-			}
+			reporter.add(message);
 		}
 	}
 

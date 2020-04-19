@@ -2,6 +2,8 @@
 
 This is a solution to the test task for an application consisting of a TCP cerver and a TCP client. The task description can be found in `task.md`.
 
+In short, several TCP clients send messages to the TCP server. The server analyses the messages and periodicaly prints reports on messages received.
+
 ## Prerequisites
 
 The project was built using Apache Maven 3.5.4 and Java 8.
@@ -22,7 +24,7 @@ The News Analyser server is running and printing (empty) digests every 10 second
 
 The client should be running. Return to the first command prompt (server). The digests should contain up to 3 news headlines sorted by their priority. When needed, finish the running process pressing Ctrl+C.
 
-You can run several TCP clients simultaneously. To run one more, open yet one command prompt and repeat the step 3 from the last list.
+You can run several TCP clients simultaneously. To run one more, open yet another command prompt and repeat the step 3 from the last list.
 
 ### Using IntelliJ IDEA
 
@@ -84,13 +86,15 @@ The `NewsReceiver` class extends `Thread`, so when its `start()` method is calle
 
 #### Analyser
 
-The class is created to obey separation of concerns principle. It is responsible for determining if a message is positive and thus contains all business logic required for such classification. The `Analyser` class works in the same thread devoted to a certain client as `NewsReceiver`. When a message is regarded positive it is passed to the instance of the `Reporter` class.
+The class is created to obey separation of concerns principle. It is responsible for determining if a message is positive and thus contains all business logic required for such classification. The `Analyser` class works in the same thread as `NewsReceiver` devoted to a certain client. When a message is regarded positive it is passed to the instance of the `Reporter` class.
 
 #### Reporter
 
 The object of this class is the same for all client threads and works in the thread where it was created - in the same thread as instance of the `NewsAnalyserServer` class. It collects messages from all client socket threads into a common collection.
 
-The `Reporter` also periodically prints reports regarding received news. When an instance of the class is created, the `Timer` instance is also created and the `ReporterTask` (internal class of the `Reporter`) is scheduled to run with a configured period. Its `run()` method works periodically in a separate timer thread. The method prints a news digest using the `ConsolePrinter` class and clears all accumulated news messages.
+The `Reporter` also periodically prints reports regarding received news. When an instance of the class is created, the `Timer` instance is also created and the `ReporterTask` (internal class of the `Reporter`) is scheduled to run with a configured period. Its `run()` method works periodically in a separate timer thread. The method prints a news digest using the `ConsolePrinter` class and then clears all accumulated news messages.
+
+The class is thread-safe and thus adding messages from different threads and deleting them during the reporting does not create race conditions.
 
 #### ConsolePrinter
 

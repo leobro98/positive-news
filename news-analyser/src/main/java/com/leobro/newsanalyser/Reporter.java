@@ -8,12 +8,13 @@ import java.util.TimerTask;
 /**
  * Responsible for accepting positive news messages from separate threads and periodically running a report on the
  * messages received since the last report. After the reporting, the accumulated messages are discarded.
+ * <p>The class is thread-safe.
  */
 public class Reporter {
 
 	private final List<NewsMessage> messages;
-	private final int newsLimit;
 	private final String[] positiveWords;
+	private final ConsolePrinter printer;
 
 	/**
 	 * Creates a new instance of the {@link Reporter} class. Runs a Timer task at the configured interval
@@ -25,10 +26,10 @@ public class Reporter {
 	 */
 	public Reporter(int period, int newsLimit, String[] positiveWords) {
 		this.messages = new ArrayList<>();
-		this.newsLimit = newsLimit;
 		this.positiveWords = positiveWords;
 
 		scheduleReports(period);
+		printer = new ConsolePrinter(newsLimit);
 	}
 
 	private void scheduleReports(int period) {
@@ -38,12 +39,14 @@ public class Reporter {
 	}
 
 	/**
-	 * Adds a news message to the collection of last messages.
+	 * Adds a news message to the collection of last messages. This method is thread-safe.
 	 *
 	 * @param message the news message to add.
 	 */
 	public void add(NewsMessage message) {
-		messages.add(message);
+		synchronized (this) {
+			messages.add(message);
+		}
 	}
 
 	/**
@@ -85,7 +88,6 @@ public class Reporter {
 				messages.clear();
 			}
 
-			ConsolePrinter printer = new ConsolePrinter(newsLimit);
 			printer.print(lastNews);
 		}
 
